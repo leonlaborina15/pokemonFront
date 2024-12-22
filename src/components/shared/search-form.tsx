@@ -41,6 +41,7 @@ export const SearchForm = ({
 	return (
 		<>
 			<div className="my-4 flex gap-2 justify-between w-full">
+				{/* Input for card name */}
 				<Input
 					type="text"
 					value={cardName}
@@ -48,6 +49,7 @@ export const SearchForm = ({
 					onChange={(e) => setCardName(e.target.value)}
 					placeholder="Enter card name"
 				/>
+				{/* Input for card number */}
 				<Input
 					type="text"
 					value={cardNumber}
@@ -55,6 +57,7 @@ export const SearchForm = ({
 					onChange={(e) => setCardNumber(e.target.value)}
 					placeholder="Enter card number"
 				/>
+				{/* Input for card set */}
 				<Input
 					type="text"
 					value={set}
@@ -62,6 +65,7 @@ export const SearchForm = ({
 					onChange={(e) => setSet(e.target.value)}
 					placeholder="Enter card set"
 				/>
+				{/* Select for language */}
 				<Select
 					value={language}
 					onValueChange={(value) => setLanguage(value)}
@@ -74,6 +78,7 @@ export const SearchForm = ({
 						<SelectItem value="Japanese">Japanese</SelectItem>
 					</SelectContent>
 				</Select>
+				{/* Search button */}
 				<Button
 					onClick={handleSearch}
 					className="min-w-[4.375rem]"
@@ -83,6 +88,7 @@ export const SearchForm = ({
 				</Button>
 			</div>
 			<div className="my-4 flex gap-2 justify-between w-full">
+				{/* Input for filtering by price delta */}
 				<Input
 					type="text"
 					value={filterDelta}
