@@ -7,6 +7,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select"
 import { Button } from "../ui/button"
+import { LoaderIcon } from "lucide-react"
 
 type SearchFormProps = {
 	cardName: string
@@ -21,10 +22,6 @@ type SearchFormProps = {
 	loading: boolean
 	filterDelta: string
 	setFilterDelta: (value: string) => void
-	sortCriteria: string
-	setSortCriteria: (value: string) => void
-	sortOrder: string
-	setSortOrder: (value: string) => void
 }
 
 export const SearchForm = ({
@@ -40,10 +37,6 @@ export const SearchForm = ({
 	loading,
 	filterDelta,
 	setFilterDelta,
-	// sortCriteria,
-	// setSortCriteria,
-	// sortOrder,
-	// setSortOrder,
 }: SearchFormProps) => {
 	return (
 		<>
@@ -69,12 +62,11 @@ export const SearchForm = ({
 					onChange={(e) => setSet(e.target.value)}
 					placeholder="Enter card set"
 				/>
-				<Select>
-					<SelectTrigger
-						className="w-[180px]"
-						value={language}
-						onChange={(e) => setLanguage((e.target as HTMLSelectElement).value)}
-					>
+				<Select
+					value={language}
+					onValueChange={(value) => setLanguage(value)}
+				>
+					<SelectTrigger className="w-[180px]">
 						<SelectValue placeholder="Language" />
 					</SelectTrigger>
 					<SelectContent>
@@ -84,9 +76,10 @@ export const SearchForm = ({
 				</Select>
 				<Button
 					onClick={handleSearch}
-					className=""
+					className="min-w-[4.375rem]"
+					disabled={loading}
 				>
-					{loading ? "Searching..." : "Search"}
+					{loading ? <LoaderIcon className="animate-spin" /> : "Search"}
 				</Button>
 			</div>
 			<div className="my-4 flex gap-2 justify-between w-full">
@@ -95,34 +88,8 @@ export const SearchForm = ({
 					value={filterDelta}
 					onChange={(e) => setFilterDelta(e.target.value)}
 					placeholder="Filter by Price Delta (e.g., >500 or <200)"
-					className="form-control me-2"
-					style={{ maxWidth: "300px" }}
+					className="max-w-80"
 				/>
-				{/* <Select>
-					<SelectTrigger
-						value={sortCriteria}
-						onChange={(e) => setSortCriteria((e.target as HTMLSelectElement).value)}
-					>
-						<SelectValue placeholder="Sort By" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="price_delta">Price Delta</SelectItem>
-						<SelectItem value="profit_potential">Profit Potential</SelectItem>
-						<SelectItem value="rarity">Rarity</SelectItem>
-					</SelectContent>
-				</Select> */}
-				{/* <Select>
-					<SelectTrigger
-						value={sortOrder}
-						onChange={(e) => setSortOrder((e.target as HTMLSelectElement).value)}
-					>
-						<SelectValue placeholder="Order" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="asc">Ascending</SelectItem>
-						<SelectItem value="desc">Descending</SelectItem>
-					</SelectContent>
-				</Select> */}
 			</div>
 		</>
 	)

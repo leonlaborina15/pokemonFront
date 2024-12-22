@@ -20,41 +20,42 @@ function App() {
 	const [set, setSet] = useState<string>("")
 	const [language, setLanguage] = useState<string>("English")
 	const [cards, setCards] = useState<Card[]>([
-		{
-			card_name: "Pikachu ex",
-			card_number: "238/191",
-			set_name: "SV08: Surging Sparks",
-			rarity: "Special Illustration Rare",
-			tcgplayer_price: "461.04",
-			psa_10_price: "1350.6",
-			price_delta: "889.56",
-			profit_potential: "192.95",
-		},
-		{
-			card_name: "Pikachu",
-			card_number: "173/165",
-			set_name: "SV: Scarlet & Violet 151",
-			rarity: "Illustration Rare",
-			tcgplayer_price: "29.54",
-			psa_10_price: "103.49",
-			price_delta: "73.95",
-			profit_potential: "250.35",
-		},
-		{
-			card_name: "Pikachu ex",
-			card_number: "247/191",
-			set_name: "SV08: Surging Sparks",
-			rarity: "Hyper Rare",
-			tcgplayer_price: "148.04",
-			psa_10_price: "488.5",
-			price_delta: "340.46",
-			profit_potential: "229.98",
-		},
+		// sample card data
+		// {
+		// 	card_name: "Pikachu ex",
+		// 	card_number: "238/191",
+		// 	set_name: "SV08: Surging Sparks",
+		// 	rarity: "Special Illustration Rare",
+		// 	tcgplayer_price: "461.04",
+		// 	psa_10_price: "1350.6",
+		// 	price_delta: "889.56",
+		// 	profit_potential: "192.95",
+		// },
+		// {
+		// 	card_name: "Pikachu",
+		// 	card_number: "173/165",
+		// 	set_name: "SV: Scarlet & Violet 151",
+		// 	rarity: "Illustration Rare",
+		// 	tcgplayer_price: "29.54",
+		// 	psa_10_price: "103.49",
+		// 	price_delta: "73.95",
+		// 	profit_potential: "250.35",
+		// },
+		// {
+		// 	card_name: "Pikachu ex",
+		// 	card_number: "247/191",
+		// 	set_name: "SV08: Surging Sparks",
+		// 	rarity: "Hyper Rare",
+		// 	tcgplayer_price: "148.04",
+		// 	psa_10_price: "488.5",
+		// 	price_delta: "340.46",
+		// 	profit_potential: "229.98",
+		// },
 	])
 	const [loading, setLoading] = useState<boolean>(false)
 	const [filterDelta, setFilterDelta] = useState<string>("")
-	const [sortCriteria, setSortCriteria] = useState<string>("")
-	const [sortOrder, setSortOrder] = useState<string>("asc")
+	// const [sortCriteria, setSortCriteria] = useState<string>("")
+	// const [sortOrder, setSortOrder] = useState<string>("asc")
 
 	useEffect(() => {
 		console.log("Cards updated:", cards)
@@ -122,10 +123,6 @@ function App() {
 					loading={loading}
 					filterDelta={filterDelta}
 					setFilterDelta={setFilterDelta}
-					sortCriteria={sortCriteria}
-					setSortCriteria={setSortCriteria}
-					sortOrder={sortOrder}
-					setSortOrder={setSortOrder}
 				/>
 				<CardTable
 					loading={loading}
@@ -137,6 +134,3 @@ function App() {
 }
 
 export default App
-
-// cd /d D:\0010\programming\pokimon\pokemon_grading_tool
-// "C:\Users\ANGEL\AppData\Local\Programs\Python\Python312\python.exe" manage.py runserver
