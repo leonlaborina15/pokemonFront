@@ -54,8 +54,8 @@ const Sets: React.FC = () => {
 			if (cardNumber) params.append("searchQuery", cardNumber.trim())
 			params.append("language", currentLanguage)
 
-			const response = await fetch(
-				`http://127.0.0.1:8000/api/cards/scrape_and_save/?${params.toString()}`
+				const response = await fetch(
+				`https://pokemongradingtool-production.up.railway.app/api/cards/scrape_and_save/?${params.toString()}`
 			)
 
 			if (!response.ok) {
