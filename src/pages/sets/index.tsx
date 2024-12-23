@@ -2,7 +2,7 @@ import { useParams, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { SearchForm } from "@/components/shared/search-form-set"
 import CardTable from "@/components/shared/card-table"
-import { cardData } from "@/pages/home"
+import { cardData } from "../home/card-data"
 
 type Card = {
 	card_name: string
