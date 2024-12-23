@@ -1,11 +1,11 @@
 import { Input } from "../ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+// import {
+//     Select,
+//     SelectContent,
+//     SelectItem,
+//     SelectTrigger,
+//     SelectValue,
+// } from "@/components/ui/select"
 import { Button } from "../ui/button"
 import { LoaderIcon } from "lucide-react"
 
@@ -14,6 +14,8 @@ type SearchFormProps = {
     setCardName: (value: string) => void
     cardNumber: string
     setCardNumber: (value: string) => void
+    set: string
+    setSet: (value: string) => void
     language: string
     setLanguage: (value: string) => void
     handleSearch: () => void
@@ -27,8 +29,8 @@ export const SearchForm = ({
     setCardName,
     cardNumber,
     setCardNumber,
-    language,
-    setLanguage,
+    // language,
+    // setLanguage,
     handleSearch,
     loading,
     filterDelta,
@@ -51,7 +53,7 @@ export const SearchForm = ({
                     onChange={(e) => setCardNumber(e.target.value)}
                     placeholder="Enter card number"
                 />
-                <Select
+                {/* <Select
                     value={language}
                     onValueChange={(value) => setLanguage(value)}
                 >
@@ -62,7 +64,7 @@ export const SearchForm = ({
                         <SelectItem value="English">English</SelectItem>
                         <SelectItem value="Japanese">Japanese</SelectItem>
                     </SelectContent>
-                </Select>
+                </Select> */}
                 <Button
                     onClick={handleSearch}
                     className="min-w-[4.375rem]"
