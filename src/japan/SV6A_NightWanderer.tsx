@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import "./App.css"
-import { SearchForm } from "./components/shared/search-form-set"
-import CardTable from "./components/shared/card-table"
+import { SearchForm } from "@/components/shared/search-form-set"
+import CardTable from "@/components/shared/card-table"
 
 type Card = {
 	card_name: string
@@ -50,7 +50,7 @@ function App() {
 			const data = await response.json()
 
 			const filteredData: Card[] = data.filter(
-				(card: Card) => card.set_name === "SV8: Super Electric Breaker"
+				(card: Card) => card.set_name === "SV6a: Night Wanderer"
 			)
 			setCards(filteredData)
 		} catch (error) {
