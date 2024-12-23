@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 
-type Card = {
+// Define the Card type with relevant properties
+export type Card = {
 	card_name: string
 	card_number: string
 	set_name: string
@@ -34,6 +35,7 @@ export default function CardTable({
 	const [sortColumn, setSortColumn] = useState<SortColumn>("card_name")
 	const [sortDirection, setSortDirection] = useState("asc")
 
+	// Memoize sorted cards to optimize performance
 	const sortedCardsMemo = useMemo(() => {
 		return [...(sortedCards || [])].sort((a, b) => {
 			if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1
@@ -42,6 +44,7 @@ export default function CardTable({
 		})
 	}, [sortedCards, sortColumn, sortDirection])
 
+	// Handle sorting logic when a column header is clicked
 	const handleSort = (column: SortColumn) => {
 		if (sortColumn === column) {
 			setSortDirection(sortDirection === "asc" ? "desc" : "asc")
@@ -55,6 +58,7 @@ export default function CardTable({
 		<Table className="table">
 			<TableHeader>
 				<TableRow>
+					{/* Render table headers with sorting functionality */}
 					<TableHead
 						className="cursor-pointer select-none"
 						onClick={() => handleSort("card_name")}
@@ -109,6 +113,7 @@ export default function CardTable({
 			</TableHeader>
 			<TableBody>
 				{loading ? (
+					// Render skeleton loaders while data is loading
 					Array.from({ length: 10 }).map((_, index) => {
 						return (
 							<TableRow key={index}>
@@ -124,6 +129,7 @@ export default function CardTable({
 						)
 					})
 				) : sortedCardsMemo.length > 0 ? (
+					// Render sorted card data
 					sortedCardsMemo.map((card, index) => {
 						const [name, number] = (card.card_name || "").split(" - ")
 						return (
@@ -140,12 +146,12 @@ export default function CardTable({
 						)
 					})
 				) : (
+					// Render message when no cards are found
 					<TableRow>
 						<TableCell
 							colSpan={8}
 							className="text-center text-destructive p-4"
 						>
-							{/* <FileWarning /> */}
 							No Cards Found
 						</TableCell>
 					</TableRow>
