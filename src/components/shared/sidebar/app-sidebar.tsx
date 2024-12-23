@@ -94,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary/50 text-sidebar-primary-foreground">
 									{/* <GalleryVerticalEnd className="size-4" /> */}
 									<img
-										src="../../../../public/pokeball.png"
+										src="/pokeball.png"
 										width={16}
 										height={16}
 										className="size-4"
@@ -102,7 +102,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								</div>
 								<div className="flex flex-col gap-0.5 leading-none">
 									<img
-										src="../../../../public/title.png"
+										src="/title.png"
 										// width={16}
 										height={16}
 										className="max-h-8"
