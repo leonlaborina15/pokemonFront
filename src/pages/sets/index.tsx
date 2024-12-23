@@ -1,6 +1,5 @@
 import { useParams, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
-import "../../App.css"
 import { SearchForm } from "@/components/shared/search-form-set"
 import CardTable from "@/components/shared/card-table"
 
