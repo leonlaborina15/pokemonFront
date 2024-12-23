@@ -2,6 +2,7 @@ import { useParams, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { SearchForm } from "@/components/shared/search-form-set"
 import CardTable from "@/components/shared/card-table"
+import { cardData } from "@/pages/home"
 
 type Card = {
 	card_name: string
@@ -24,6 +25,11 @@ const Sets: React.FC = () => {
 	const [filterDelta, setFilterDelta] = useState<string>("")
 	const [currentSet, setCurrentSet] = useState<string>(set || "")
 	const [currentLanguage, setCurrentLanguage] = useState<string>(language || "")
+
+	const getSetName = (set: string, language: string) => {
+		const card = cardData.find((card) => card.title === language)
+		return card?.sets.find((s) => s.replace(/[^a-zA-Z0-9]/g, "_") === set) || set
+	}
 
 	useEffect(() => {
 		console.log("Cards updated:", cards)
@@ -85,7 +91,7 @@ const Sets: React.FC = () => {
 			<div className="max-w-5xl mx-auto py-5">
 				<h1 className="text-5xl font-bold text-center my-12">Pokemon Grading Tool</h1>
 				<h4 className="text-3xl font-bold text-center my-12">
-					{currentLanguage} | {currentSet}
+					{currentLanguage} | {getSetName(currentSet, currentLanguage)}
 				</h4>
 				<SearchForm
 					cardName={cardName}

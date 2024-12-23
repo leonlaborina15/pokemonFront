@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-const cardData = [
+export const cardData = [
 	{
 		title: "English",
 		sets: [
