@@ -114,7 +114,7 @@ export default function CardTable({
 			<TableBody>
 				{loading ? (
 					// Render skeleton loaders while data is loading
-					Array.from({ length: 10 }).map((_, index) => {
+					Array.from({ length: 3 }).map((_, index) => {
 						return (
 							<TableRow key={index}>
 								{Array.from({ length: 8 }).map((_, index) => (
