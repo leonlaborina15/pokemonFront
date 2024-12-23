@@ -1,46 +1,40 @@
-import { useState, useEffect } from "react"
 import "./App.css"
+import { useState, useEffect } from "react"
 import { SearchForm } from "./components/shared/search-form"
-import CardTable from "./components/shared/card-table"
-
-type Card = {
-    card_name: string
-    card_number: string
-    set_name: string
-    rarity: string
-    tcgplayer_price: string
-    psa_10_price: string
-    price_delta: string
-    profit_potential: string
-}
+import CardTable, { Card } from "./components/shared/card-table"
 
 function App() {
-    const [cardName, setCardName] = useState<string>("")
-    const [cardNumber, setCardNumber] = useState<string>("")
-    const [set, setSet] = useState<string>("")
-    const [language, setLanguage] = useState<string>("English")
-    const [cards, setCards] = useState<Card[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
-    const [filterDelta, setFilterDelta] = useState<string>("")
+	// State variables for form inputs and card data
+	const [cardName, setCardName] = useState<string>("")
+	const [cardNumber, setCardNumber] = useState<string>("")
+	const [set, setSet] = useState<string>("")
+	const [language, setLanguage] = useState<string>("English")
+	const [cards, setCards] = useState<Card[]>([])
+	const [loading, setLoading] = useState<boolean>(false)
+	const [filterDelta, setFilterDelta] = useState<string>("")
 
-    useEffect(() => {
-        console.log("Cards updated:", cards)
-    }, [cards])
+	// Log cards data whenever it updates
+	useEffect(() => {
+		console.log("Cards updated:", cards)
+	}, [cards])
 
-    const handleSearch = async () => {
-        if (!cardName && !cardNumber) return
-        setLoading(true)
+	// Function to handle search and fetch card data from API
+	const handleSearch = async () => {
+		if (!cardName && !cardNumber) return
+		setLoading(true)
 
         try {
             const params = new URLSearchParams()
 
-            if (cardName) params.append("searchQuery", cardName.trim())
-            if (cardNumber) params.append("searchQuery", cardNumber.trim())
-            params.append("language", language)
+			// Append search parameters based on user input
+			if (cardName) params.append("searchQuery", cardName.trim())
+			if (cardNumber) params.append("searchQuery", cardNumber.trim())
+			params.append("language", language)
 
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/cards/scrape_and_save/?${params.toString()}`
-            )
+			// Fetch data from API
+			const response = await fetch(
+				`http://127.0.0.1:8000/api/cards/scrape_and_save/?${params.toString()}`
+			)
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`)
@@ -48,29 +42,31 @@ function App() {
 
             const data = await response.json()
 
-            const filteredData: Card[] = set
-                ? data.filter((card: Card) => card.set_name === set)
-                : data
-            setCards(filteredData)
-        } catch (error) {
-            console.error("Error fetching cards:", error)
-            setCards([])
-        } finally {
-            setLoading(false)
-        }
-    }
+			// Filter data to include only cards from a specific set
+			const filteredData: Card[] = data.filter(
+				(card: Card) => card.set_name === "SV08: Surging Sparks"
+			)
+			setCards(filteredData)
+		} catch (error) {
+			console.error("Error fetching cards:", error)
+			setCards([])
+		} finally {
+			setLoading(false)
+		}
+	}
 
-    const filteredCards = cards.filter((card) => {
-        if (filterDelta) {
-            const deltaValue = parseFloat(card.price_delta.toString() || "0")
-            if (filterDelta.startsWith(">")) {
-                return deltaValue > parseFloat(filterDelta.slice(1))
-            } else if (filterDelta.startsWith("<")) {
-                return deltaValue < parseFloat(filterDelta.slice(1))
-            }
-        }
-        return true
-    })
+	// Filter cards based on price delta if filter is applied
+	const filteredCards = cards.filter((card) => {
+		if (filterDelta) {
+			const deltaValue = parseFloat(card.price_delta.toString() || "0")
+			if (filterDelta.startsWith(">")) {
+				return deltaValue > parseFloat(filterDelta.slice(1))
+			} else if (filterDelta.startsWith("<")) {
+				return deltaValue < parseFloat(filterDelta.slice(1))
+			}
+		}
+		return true
+	})
 
     return (
         <>
