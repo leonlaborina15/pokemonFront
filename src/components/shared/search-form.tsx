@@ -24,7 +24,7 @@ type SearchFormProps = {
 	setFilterDelta: (value: string) => void
 }
 
-export const SearchForm = ({
+const SearchForm = ({
 	cardName,
 	setCardName,
 	cardNumber,
@@ -100,3 +100,5 @@ export const SearchForm = ({
 		</>
 	)
 }
+
+export default SearchForm
