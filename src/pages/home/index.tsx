@@ -1,47 +1,18 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-const cardData = [
-	{
-		title: "English",
-		sets: [
-			"SV08: Surging Sparks",
-			"SV07: Stellar Crown",
-			"SV06: Twilight Masquerade",
-			"SV05: Temporal Forces",
-			"SV04: Paradox Rift",
-			"SV03: Obsidian Flames",
-			"SV: Shrouded Fable",
-			"SV: Scarlet & Violet 151",
-			"SV: Paldean Fates",
-		],
-	},
-	{
-		title: "Japanese",
-		sets: [
-			"SV7A: Paradise Dragona",
-			"SV7: Stellar Miracle",
-			"SV6A: Night Wanderer",
-			"SV6: Transformation Mask",
-			"SV5M: Cyber Judge",
-			"SV5K: Wild Force",
-			"SV5A: Crimson Haze",
-			"SV-P Promotional Cards",
-			"SV: Ancient Koraidon ex Starter Deck & Build Set",
-		],
-	},
-]
+import { cardData } from "./card-data"
+import { ChevronRight } from "lucide-react"
 
 const Home: React.FC = () => {
 	return (
 		<section
 			aria-label="Home Section"
-			className="min-h-screen"
+			className="min-h-[calc(100vh-64px)]"
 		>
-			<div className="max-w-2xl mx-auto py-5">
-				<h1 className="text-5xl font-bold text-center my-12">Pokemon Card Sets</h1>
-				<div className="flex justify-between">
+			<div>
+				<h1 className="text-center">Pokemon Card Sets</h1>
+				<div className="flex flex-col lg:flex-row gap-6 justify-between items-center lg:items-start max-w-3xl mx-auto p-6">
 					{cardData.map((card, index) => (
 						<React.Fragment key={index}>
 							<Card className="max-w-80 w-full">
@@ -55,8 +26,10 @@ const Home: React.FC = () => {
 												to={`/sets/?set=${set.replace(/[^a-zA-Z0-9]/g, "_")}&language=${
 													card.title
 												}`}
+												className="group inline-flex items-center gap-1 transition-colors"
 											>
 												{set}
+												<ChevronRight className="h-4 w-4 translate-x-0 transform opacity-0 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:opacity-100" />
 											</Link>
 										</p>
 									))}
