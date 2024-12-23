@@ -71,7 +71,6 @@ const Sets: React.FC = () => {
             // Get the actual set name for filtering
             const actualSetName = getSetName(currentSet, currentLanguage)
             console.log("Actual Set Name:", actualSetName)
-            console.log("Available Cards:", data.map(card => card.set_name))
 
             // Filter the data using the actual set name
             const filteredData: Card[] = currentSet
