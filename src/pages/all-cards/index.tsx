@@ -38,7 +38,7 @@ const AllCards: React.FC = () => {
 			params.append("language", language)
 
 			const response = await fetch(
-				`http://127.0.0.1:8000/api/cards/scrape_and_save/?${params.toString()}`
+				`https://pokemongradingtool-production.up.railway.app/api/cards/scrape_and_save/?${params.toString()}`
 			)
 
 			if (!response.ok) {
