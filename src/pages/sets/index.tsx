@@ -87,32 +87,31 @@ const Sets: React.FC = () => {
 	})
 
 	return (
-		<>
-			<div className="max-w-5xl mx-auto py-5">
-				<h1 className="text-5xl font-bold text-center my-12">Pokemon Grading Tool</h1>
-				<h4 className="text-3xl font-bold text-center my-12">
-					{currentLanguage} | {getSetName(currentSet, currentLanguage)}
-				</h4>
-				<SearchForm
-					cardName={cardName}
-					setCardName={setCardName}
-					cardNumber={cardNumber}
-					setCardNumber={setCardNumber}
-					set={currentSet}
-					setSet={setCurrentSet}
-					language={currentLanguage}
-					setLanguage={setCurrentLanguage}
-					handleSearch={handleSearch}
-					loading={loading}
-					filterDelta={filterDelta}
-					setFilterDelta={setFilterDelta}
-				/>
-				<CardTable
-					loading={loading}
-					sortedCards={filteredCards}
-				/>
-			</div>
-		</>
+		<section
+			aria-label="Sets Section"
+			className="min-h-[calc(100vh-64px)]"
+		>
+			<h1 className="text-center">Pokemon Grading Tool</h1>
+			<h4 className="scroll-m-20 text-xl text-center font-semibold tracking-tight">
+				{currentLanguage} | {getSetName(currentSet, currentLanguage)}
+			</h4>
+			<SearchForm
+				cardName={cardName}
+				setCardName={setCardName}
+				cardNumber={cardNumber}
+				setCardNumber={setCardNumber}
+				set={currentSet}
+				setSet={setCurrentSet}
+				handleSearch={handleSearch}
+				loading={loading}
+				filterDelta={filterDelta}
+				setFilterDelta={setFilterDelta}
+			/>
+			<CardTable
+				loading={loading}
+				sortedCards={filteredCards}
+			/>
+		</section>
 	)
 }
 

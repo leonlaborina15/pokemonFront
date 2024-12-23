@@ -73,29 +73,26 @@ const AllCards: React.FC = () => {
 			aria-label="AllCards Section"
 			className="min-h-[calc(100vh-64px)]"
 		>
-			<div className="max-w-5xl mx-auto overflow-hidden">
-				<h1 className="text-center">Pokemon Grading Tool</h1>
-				<SearchForm
-					cardName={cardName}
-					setCardName={setCardName}
-					cardNumber={cardNumber}
-					setCardNumber={setCardNumber}
-					set={set}
-					setSet={setSet}
-					language={language}
-					setLanguage={setLanguage}
-					handleSearch={handleSearch}
-					loading={loading}
-					filterDelta={filterDelta}
-					setFilterDelta={setFilterDelta}
-				/>
-				<div className="overflow-auto">
-					<CardTable
-						loading={loading}
-						sortedCards={filteredCards}
-					/>
-				</div>
-			</div>
+			{" "}
+			<h1 className="text-center">Pokemon Grading Tool</h1>
+			<SearchForm
+				cardName={cardName}
+				setCardName={setCardName}
+				cardNumber={cardNumber}
+				setCardNumber={setCardNumber}
+				set={set}
+				setSet={setSet}
+				language={language}
+				setLanguage={setLanguage}
+				handleSearch={handleSearch}
+				loading={loading}
+				filterDelta={filterDelta}
+				setFilterDelta={setFilterDelta}
+			/>
+			<CardTable
+				loading={loading}
+				sortedCards={filteredCards}
+			/>
 		</section>
 	)
 }
