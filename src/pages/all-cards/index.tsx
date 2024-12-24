@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import React from "react"
 import { CardTable, SearchForm } from "@/components/shared"
+import { motion } from "motion/react"
 
 type Card = {
 	card_name: string
@@ -69,7 +70,11 @@ const AllCards: React.FC = () => {
 		return true
 	})
 	return (
-		<section
+		<motion.section
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			exit={{ opacity: 0 }}
+			transition={{ duration: 0.5, ease: "easeInOut" }}
 			aria-label="AllCards Section"
 			className="min-h-[calc(100vh-64px)]"
 		>
@@ -93,7 +98,7 @@ const AllCards: React.FC = () => {
 				loading={loading}
 				sortedCards={filteredCards}
 			/>
-		</section>
+		</motion.section>
 	)
 }
 
