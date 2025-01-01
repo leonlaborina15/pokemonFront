@@ -54,7 +54,6 @@ const Sets: React.FC = () => {
             if (cardNumber) params.append("searchQuery", cardNumber.trim())
             params.append("language", currentLanguage)
 
-            // Debug logs
             console.log("Current Set:", currentSet)
             console.log("Current Language:", currentLanguage)
 
@@ -68,11 +67,9 @@ const Sets: React.FC = () => {
 
             const data = await response.json()
 
-            // Get the actual set name for filtering
             const actualSetName = getSetName(currentSet, currentLanguage)
             console.log("Actual Set Name:", actualSetName)
 
-            // Filter the data using the actual set name
             const filteredData: Card[] = currentSet
                 ? data.filter((card: Card) => {
                     const normalizedCardSet = card.set_name.trim()

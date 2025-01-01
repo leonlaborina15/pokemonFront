@@ -25,6 +25,8 @@ export const cardData = [
 			"SV5A: Crimson Haze",
 			"SV-P Promotional Cards",
 			"SV: Ancient Koraidon ex Starter Deck & Build Set",
+			"SV8a: Terastal Fest ex",
+			"SV8: Super Electric Breaker"
 		],
 	},
 ]
