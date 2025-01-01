@@ -72,7 +72,7 @@ export const SearchForm = ({
 				</div>
 				<Button
 					onClick={handleSearch}
-					className="min-w-[4.375rem] hidden sm:block"
+					className="min-w-[4.375rem] hidden sm:inline-flex"
 					disabled={loading}
 				>
 					{loading ? <LoaderIcon className="animate-spin" /> : "Search"}
@@ -81,7 +81,7 @@ export const SearchForm = ({
 			<div className="px-4 mb-4">
 				<Button
 					onClick={handleSearch}
-					className="w-full sm:hidden block"
+					className="w-full sm:hidden inline-flex"
 					disabled={loading}
 				>
 					{loading ? <LoaderIcon className="animate-spin" /> : "Search"}

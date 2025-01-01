@@ -3,10 +3,15 @@ import { Link } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cardData } from "./card-data"
 import { ChevronRight } from "lucide-react"
+import { motion } from "motion/react"
 
 const Home: React.FC = () => {
 	return (
-		<section
+		<motion.section
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			exit={{ opacity: 0 }}
+			transition={{ duration: 0.5, ease: "easeInOut" }}
 			aria-label="Home Section"
 			className="min-h-[calc(100vh-64px)]"
 		>
@@ -39,7 +44,7 @@ const Home: React.FC = () => {
 					))}
 				</div>
 			</div>
-		</section>
+		</motion.section>
 	)
 }
 

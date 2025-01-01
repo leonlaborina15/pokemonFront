@@ -94,7 +94,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						>
 							<Link to="/">
 								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary/50 text-sidebar-primary-foreground">
-									{/* <GalleryVerticalEnd className="size-4" /> */}
 									<img
 										src="/pokeball.png"
 										width={16}
@@ -105,30 +104,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								<div className="flex flex-col gap-0.5 leading-none">
 									<img
 										src="/title.png"
-										// width={16}
 										height={16}
 										className="max-h-8"
 									/>
-
-									{/* <span className="font-semibold">TCG TOOL</span> */}
 								</div>
 							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
-			{/* <SidebarHeader>
-			</SidebarHeader> */}
 			<SidebarContent>
 				<NavMain
 					items={data.navMain}
 					singleItems={singleItems}
 				/>
-				{/* <NavProjects projects={data.projects} /> */}
 			</SidebarContent>
 			<SidebarFooter>
 				<ModeToggle />
-				{/* <NavUser user={data.user} /> */}
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>
