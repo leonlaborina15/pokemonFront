@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import { CardTable, SearchForm } from "@/components/shared";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 type Card = {
   card_name: string;
@@ -14,8 +14,14 @@ type Card = {
   profit_potential: string;
 };
 
+type ApiResponse = {
+  message?: string;
+  cards?: Card[];
+  error?: string;
+};
+
 const rarityOptionsEnglish = [
-	  { value: "All", label: "All Rarity" },
+  { value: "All", label: "All Rarity" },
   { value: "Illustration Rare", label: "Illustration Rare" },
   { value: "Special Illustration Rare", label: "Special Illustration Rare" },
   { value: "Hyper Rare", label: "Hyper Rare" },
@@ -23,12 +29,11 @@ const rarityOptionsEnglish = [
 ];
 
 const rarityOptionsJapanese = [
-		  { value: "All", label: "All Rarity" },
+  { value: "All", label: "All Rarity" },
   { value: "Special Art Rare", label: "Special Art Rare" },
   { value: "Super Rare", label: "Super Rare" },
   { value: "Ultra Rare", label: "Ultra Rare" },
-	  { value: "Art Rare", label: "Art Rare" },
-
+  { value: "Art Rare", label: "Art Rare" },
 ];
 
 const AllCards: React.FC = () => {
@@ -40,45 +45,80 @@ const AllCards: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [filterDelta, setFilterDelta] = useState<string>("");
   const [rarity, setRarity] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
+  // Clear cards when inputs change
+  useEffect(() => {
+    setCards([]);
+  }, [cardName, set, language]);
 
   useEffect(() => {
     console.log("Cards updated:", cards);
   }, [cards]);
 
   const handleSearch = async () => {
-    if (!cardName && !cardNumber) return;
+    if (!cardName && !set) {
+      setError("Please enter either a card name or set name");
+      return;
+    }
+    setError("");
     setLoading(true);
+    setCards([]); // Clear existing results before new search
 
     try {
       const params = new URLSearchParams();
 
-      if (cardName) params.append("searchQuery", cardName.trim());
-      if (cardNumber) params.append("searchQuery", cardNumber.trim());
+      // Handle set name search
+      if (set && !cardName) {
+        params.append("searchQuery", set.trim());
+      }
+      // Handle card name search
+      else if (cardName && !set) {
+        params.append("searchQuery", cardName.trim());
+      }
+      // Handle combined search
+      else if (cardName && set) {
+        params.append("searchQuery", cardName.trim());
+        params.append("set_name", set.trim());
+      }
+
       params.append("language", language);
 
       const response = await fetch(
-        `https://pokemongradingtool-production.up.railway.app/api/cards/scrape_and_save/?${params.toString()}`
+        `http://127.0.0.1:8000/api/cards/scrape_and_save/?${params.toString()}`
       );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      const filteredData: Card[] = set
-        ? data.filter((card: Card) => card.set_name === set)
-        : data;
+      const data: ApiResponse = await response.json();
 
-      setCards(filteredData);
+      if (data.error) {
+        setError(data.error);
+        setCards([]);
+        return;
+      }
+
+      if (data.cards) {
+        setCards(data.cards);
+      } else if (Array.isArray(data)) {
+        setCards(data);
+      } else {
+        setError("Invalid response format from server");
+        setCards([]);
+      }
+
     } catch (error) {
       console.error("Error fetching cards:", error);
+      setError(error instanceof Error ? error.message : "An error occurred while fetching cards");
       setCards([]);
     } finally {
       setLoading(false);
     }
   };
 
-const filteredCards = cards.filter((card) => {
+  const filteredCards = cards.filter((card) => {
     if (filterDelta) {
       const deltaValue = parseFloat(card.price_delta || "0");
       if (filterDelta.startsWith(">")) {
@@ -103,6 +143,17 @@ const filteredCards = cards.filter((card) => {
       className="min-h-[calc(100vh-64px)]"
     >
       <h1 className="text-center">Pokemon Grading Tool</h1>
+
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-red-500 text-center mb-4 p-2 bg-red-100 rounded"
+        >
+          {error}
+        </motion.div>
+      )}
+
       <SearchForm
         cardName={cardName}
         setCardName={setCardName}
@@ -122,7 +173,14 @@ const filteredCards = cards.filter((card) => {
           language === "English" ? rarityOptionsEnglish : rarityOptionsJapanese
         }
       />
-      <CardTable loading={loading} sortedCards={filteredCards} />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+      >
+        <CardTable loading={loading} sortedCards={filteredCards} />
+      </motion.div>
     </motion.section>
   );
 };

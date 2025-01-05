@@ -2,7 +2,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Info, LoaderIcon } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select" // Add this import
 type SearchFormProps = {
 	cardName: string
 	setCardName: (value: string) => void
@@ -14,6 +14,9 @@ type SearchFormProps = {
 	loading: boolean
 	filterDelta: string
 	setFilterDelta: (value: string) => void
+	rarity: string;
+  setRarity: (value: string) => void;
+  rarityOptions: { value: string; label: string }[];
 }
 
 export const SearchForm = ({
@@ -25,6 +28,9 @@ export const SearchForm = ({
 	loading,
 	filterDelta,
 	setFilterDelta,
+	rarity,
+  setRarity,
+  rarityOptions,
 }: SearchFormProps) => {
 	return (
 		<>
@@ -70,6 +76,19 @@ export const SearchForm = ({
 						</TooltipProvider>
 					</div>
 				</div>
+				{/* Select for rarity */}
+          <Select value={rarity} onValueChange={setRarity}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Rarity" />
+            </SelectTrigger>
+            <SelectContent>
+              {rarityOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 				<Button
 					onClick={handleSearch}
 					className="min-w-[4.375rem] hidden sm:inline-flex"
