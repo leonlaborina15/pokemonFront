@@ -91,9 +91,9 @@ const Sets: React.FC = () => {
       params.append("searchQuery", setName.trim())
       params.append("language", language)
 
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/cards/scrape_and_save/?${params.toString()}`
-      )
+       const response = await fetch(
+        `https://pokemongradingtool-production.up.railway.app/api/cards/scrape_and_save/?${params.toString()}`
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
@@ -146,9 +146,9 @@ const Sets: React.FC = () => {
       params.append("language", currentLanguage)
       params.append("set_name", actualSetName)
 
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/cards/scrape_and_save/?${params.toString()}`
-      )
+       const response = await fetch(
+        `https://pokemongradingtool-production.up.railway.app/api/cards/scrape_and_save/?${params.toString()}`
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
