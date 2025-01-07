@@ -1,12 +1,6 @@
 import React from "react";
 import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "../ui/button";
 import { Info, LoaderIcon, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -27,6 +21,7 @@ type SearchFormProps = {
   rarity: string;
   setRarity: (value: string) => void;
   rarityOptions: { value: string; label: string }[];
+  setOptions: string[];
 };
 
 const SearchForm: React.FC<SearchFormProps> = ({
@@ -45,6 +40,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
   rarity,
   setRarity,
   rarityOptions,
+  setOptions,
 }) => {
   return (
     <div className="p-4">
@@ -62,7 +58,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
             />
             {cardName && (
               <button
-                onClick={() => setCardName("")}
+                onClick={() => setCardName("")} // Clear only cardName
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 type="button"
               >
@@ -83,7 +79,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
             />
             {cardNumber && (
               <button
-                onClick={() => setCardNumber("")}
+                onClick={() => setCardNumber("")} // Clear only cardNumber
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 type="button"
               >
@@ -92,65 +88,57 @@ const SearchForm: React.FC<SearchFormProps> = ({
             )}
           </div>
 
-          {/* Input for card set */}
-          <div className="relative">
-            <Input
-              type="text"
-              value={set}
-              id="card-set"
-              onChange={(e) => setSet(e.target.value)}
-              placeholder="Enter card set"
-              className="pr-8"
-            />
-            {set && (
-              <button
-                onClick={() => setSet("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                type="button"
-              >
-                <X size={16} />
-              </button>
-            )}
-          </div>
+          {/* Select for card set */}
+          <Select value={set} onValueChange={setSet}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Set" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All Sets">All Sets</SelectItem>
+              {setOptions.map((setOption) => (
+                <SelectItem key={setOption} value={setOption}>
+                  {setOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {/* Input for filtering by price delta */}
-          <div className="space-y-2">
-            <div className="relative h-9">
-              <Input
-                id="filter-delta"
-                type="text"
-                value={filterDelta}
-                onChange={(e) => setFilterDelta(e.target.value)}
-                placeholder="Filter by Price Delta"
-                className="pr-16 max-w-80" // Increased padding for both X and Info icons
-              />
-              {filterDelta && (
-                <button
-                  onClick={() => setFilterDelta("")}
-                  className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  type="button"
-                >
-                  <X size={16} />
-                </button>
-              )}
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger className="absolute inset-y-0 end-0 flex w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50">
-                    <Info size={16} strokeWidth={2} aria-hidden="true" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>(e.g., &lt;500 or &gt;200)</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+          <div className="relative">
+            <Input
+              id="filter-delta"
+              type="text"
+              value={filterDelta}
+              onChange={(e) => setFilterDelta(e.target.value)}
+              placeholder="Filter by Price Delta"
+              className="pr-8"
+            />
+            {filterDelta && (
+              <button
+                onClick={() => setFilterDelta("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                type="button"
+              >
+                <X size={16} />
+              </button>
+            )}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger className="absolute right-8 top-1/2 -translate-y-1/2">
+                  <Info size={16} strokeWidth={2} aria-hidden="true" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>(e.g., &lt;500 or &gt;200)</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 
         <div className="flex gap-2 items-center mt-2">
           {/* Select for language */}
           <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Language" />
             </SelectTrigger>
             <SelectContent>
@@ -161,10 +149,11 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
           {/* Select for rarity */}
           <Select value={rarity} onValueChange={setRarity}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select Rarity" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="All Rarity">All Rarity</SelectItem>
               {rarityOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}

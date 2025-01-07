@@ -12,6 +12,7 @@ type Card = {
   psa_10_price: string;
   price_delta: string;
   profit_potential: string;
+  last_updated: string;
 };
 
 type ApiResponse = {
@@ -21,33 +22,55 @@ type ApiResponse = {
 };
 
 const rarityOptionsEnglish = [
-  { value: "All", label: "All Rarity" },
   { value: "Illustration Rare", label: "Illustration Rare" },
   { value: "Special Illustration Rare", label: "Special Illustration Rare" },
   { value: "Hyper Rare", label: "Hyper Rare" },
-  { value: "Ultra Rare", label: "Ultra Rare" },
 ];
 
 const rarityOptionsJapanese = [
-  { value: "All", label: "All Rarity" },
   { value: "Special Art Rare", label: "Special Art Rare" },
   { value: "Super Rare", label: "Super Rare" },
   { value: "Ultra Rare", label: "Ultra Rare" },
   { value: "Art Rare", label: "Art Rare" },
 ];
 
+const englishSets = [
+  "SV08: Surging Sparks",
+  "SV07: Stellar Crown",
+  "SV06: Twilight Masquerade",
+  "SV05: Temporal Forces",
+  "SV04: Paradox Rift",
+  "SV03: Obsidian Flames",
+  "SV: Shrouded Fable",
+  "SV: Scarlet & Violet 151",
+  "SV: Paldean Fates"
+];
+
+const japaneseSets = [
+  "SV7A: Paradise Dragona",
+  "SV7: Stellar Miracle",
+  "SV6A: Night Wanderer",
+  "SV6: Transformation Mask",
+  "SV5M: Cyber Judge",
+  "SV5K: Wild Force",
+  "SV5A: Crimson Haze",
+  "SV-P Promotional Cards",
+  "SV: Ancient Koraidon ex Starter Deck & Build Set",
+  "SV8a: Terastal Fest ex",
+  "SV8: Super Electric Breaker"
+];
+
 const AllCards: React.FC = () => {
   const [cardName, setCardName] = useState<string>("");
   const [cardNumber, setCardNumber] = useState<string>("");
-  const [set, setSet] = useState<string>("");
+  const [set, setSet] = useState<string>("All Sets");
   const [language, setLanguage] = useState<string>("English");
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [filterDelta, setFilterDelta] = useState<string>("");
-  const [rarity, setRarity] = useState<string>("");
+  const [rarity, setRarity] = useState<string>("All Rarity");
   const [error, setError] = useState<string>("");
 
-  // Clear cards when inputs change
   useEffect(() => {
     setCards([]);
   }, [cardName, set, language]);
@@ -57,36 +80,35 @@ const AllCards: React.FC = () => {
   }, [cards]);
 
   const handleSearch = async () => {
-    if (!cardName && !set) {
-      setError("Please enter either a card name or set name");
+    if (!cardName && set === "All Sets") {
+      setError("Please enter either a card name or select a set");
       return;
     }
     setError("");
     setLoading(true);
-    setCards([]); // Clear existing results before new search
+    setCards([]);
 
     try {
       const params = new URLSearchParams();
-
-      // Handle set name search
-      if (set && !cardName) {
-        params.append("searchQuery", set.trim());
-      }
-      // Handle card name search
-      else if (cardName && !set) {
-        params.append("searchQuery", cardName.trim());
-      }
-      // Handle combined search
-      else if (cardName && set) {
-        params.append("searchQuery", cardName.trim());
-        params.append("set_name", set.trim());
-      }
-
       params.append("language", language);
 
-      const response = await fetch(
-        `https://pokemongradingtool-production.up.railway.app/api/cards/scrape_and_save/?${params.toString()}`
-      );
+      let response: Response;
+
+      if (set !== "All Sets" && !cardName) {
+        params.append("set_name", set.trim());
+        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_set/?${params.toString()}`);
+      } else if (cardName && set === "All Sets") {
+        params.append("card_name", cardName.trim());
+        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card/?${params.toString()}`);
+      } else if (cardName && set !== "All Sets") {
+        params.append("card_name", cardName.trim());
+        params.append("set_name", set.trim());
+        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card_set/?${params.toString()}`);
+      } else if (cardName && cardNumber) {
+        params.append("card_name", cardName.trim());
+        params.append("card_number", cardNumber.trim());
+        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card_number/?${params.toString()}`);
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -101,9 +123,15 @@ const AllCards: React.FC = () => {
       }
 
       if (data.cards) {
-        setCards(data.cards);
+        setCards(data.cards.map((card) => {
+          const [name, number] = card.card_name.split(" - ");
+          return { ...card, card_name: name, card_number: number };
+        }));
       } else if (Array.isArray(data)) {
-        setCards(data);
+        setCards(data.map((card) => {
+          const [name, number] = card.card_name.split(" - ");
+          return { ...card, card_name: name, card_number: number };
+        }));
       } else {
         setError("Invalid response format from server");
         setCards([]);
@@ -118,20 +146,21 @@ const AllCards: React.FC = () => {
     }
   };
 
+  
+
   const filteredCards = cards.filter((card) => {
-    if (filterDelta) {
-      const deltaValue = parseFloat(card.price_delta || "0");
-      if (filterDelta.startsWith(">")) {
-        return deltaValue > parseFloat(filterDelta.slice(1));
-      } else if (filterDelta.startsWith("<")) {
-        return deltaValue < parseFloat(filterDelta.slice(1));
-      }
-    }
-    if (rarity && rarity !== "All") {
-      return card.rarity === rarity;
-    }
-    return true;
+    const matchesLanguage = card.language === language;
+    const matchesRarity = rarity === "All Rarity" || card.rarity === rarity;
+    const matchesDelta =
+      !filterDelta ||
+      (filterDelta.startsWith(">") && parseFloat(card.price_delta || "0") > parseFloat(filterDelta.slice(1))) ||
+      (filterDelta.startsWith("<") && parseFloat(card.price_delta || "0") < parseFloat(filterDelta.slice(1)));
+    const matchesCardName = card.card_name?.toLowerCase().includes(cardName.toLowerCase());
+    const matchesCardNumber = card.card_number?.includes(cardNumber);
+    return matchesLanguage && matchesRarity && matchesDelta && matchesCardName && matchesCardNumber;
   });
+
+  const setOptions = language === "English" ? englishSets : japaneseSets;
 
   return (
     <motion.section
@@ -169,9 +198,8 @@ const AllCards: React.FC = () => {
         setFilterDelta={setFilterDelta}
         rarity={rarity}
         setRarity={setRarity}
-        rarityOptions={
-          language === "English" ? rarityOptionsEnglish : rarityOptionsJapanese
-        }
+        rarityOptions={language === "English" ? rarityOptionsEnglish : rarityOptionsJapanese}
+        setOptions={setOptions}
       />
 
       <motion.div

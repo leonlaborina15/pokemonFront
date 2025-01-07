@@ -1,5 +1,4 @@
 import * as React from "react"
-import { CircleX } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
@@ -50,11 +49,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 						aria-label="Clear input"
 						onClick={handleClearInput}
 					>
-						<CircleX
-							size={16}
-							strokeWidth={2}
-							aria-hidden="true"
-						/>
+
 					</button>
 				)}
 			</div>
