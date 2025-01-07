@@ -13,6 +13,7 @@ type Card = {
   price_delta: string;
   profit_potential: string;
   last_updated: string;
+  language: string; // Ensure language is included
 };
 
 type ApiResponse = {
@@ -92,22 +93,33 @@ const AllCards: React.FC = () => {
       const params = new URLSearchParams();
       params.append("language", language);
 
-      let response: Response;
+      let response: Response | undefined; // Define the response variable here
 
+      // Handle set name search
       if (set !== "All Sets" && !cardName) {
         params.append("set_name", set.trim());
         response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_set/?${params.toString()}`);
-      } else if (cardName && set === "All Sets") {
+      }
+      // Handle card name search
+      else if (cardName && set === "All Sets") {
         params.append("card_name", cardName.trim());
         response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card/?${params.toString()}`);
-      } else if (cardName && set !== "All Sets") {
+      }
+      // Handle combined search
+      else if (cardName && set !== "All Sets") {
         params.append("card_name", cardName.trim());
         params.append("set_name", set.trim());
         response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card_set/?${params.toString()}`);
-      } else if (cardName && cardNumber) {
+      }
+      // Handle card name and card number search
+      else if (cardName && cardNumber) {
         params.append("card_name", cardName.trim());
         params.append("card_number", cardNumber.trim());
         response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card_number/?${params.toString()}`);
+      }
+
+      if (!response) {
+        throw new Error("No valid search criteria provided");
       }
 
       if (!response.ok) {
@@ -145,8 +157,6 @@ const AllCards: React.FC = () => {
       setLoading(false);
     }
   };
-
-  
 
   const filteredCards = cards.filter((card) => {
     const matchesLanguage = card.language === language;
