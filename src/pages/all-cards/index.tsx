@@ -98,24 +98,24 @@ const AllCards: React.FC = () => {
       // Handle set name search
       if (set !== "All Sets" && !cardName) {
         params.append("set_name", set.trim());
-        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_set/?${params.toString()}`);
+        response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_set/?${params.toString()}`);
       }
       // Handle card name search
       else if (cardName && set === "All Sets") {
         params.append("card_name", cardName.trim());
-        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card/?${params.toString()}`);
+        response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_card/?${params.toString()}`);
       }
       // Handle combined search
       else if (cardName && set !== "All Sets") {
         params.append("card_name", cardName.trim());
         params.append("set_name", set.trim());
-        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card_set/?${params.toString()}`);
+        response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_card_set/?${params.toString()}`);
       }
       // Handle card name and card number search
       else if (cardName && cardNumber) {
         params.append("card_name", cardName.trim());
         params.append("card_number", cardNumber.trim());
-        response = await fetch(`http://127.0.0.1:8000/api/cards/fetch_card_number/?${params.toString()}`);
+        response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_card_number/?${params.toString()}`);
       }
 
       if (!response) {

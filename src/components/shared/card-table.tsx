@@ -125,7 +125,7 @@ export default function CardTable({
               className="cursor-pointer select-none"
               onClick={() => handleSort("last_updated")} // Add sorting for Last Pull
             >
-              Last Pull {sortColumn === "last_updated" && (sortDirection === "asc" ? "↑" : "↓")}
+              Last Updated{sortColumn === "last_updated" && (sortDirection === "asc" ? "↑" : "↓")}
             </TableHead>
           </TableRow>
         </TableHeader>
