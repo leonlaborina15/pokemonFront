@@ -1,3 +1,5 @@
+import { inject } from '@vercel/analytics';
+inject();
 import { Routes, Route } from "react-router-dom"
 import Home from "./pages/home"
 import AllCards from "./pages/all-cards"
