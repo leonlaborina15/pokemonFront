@@ -94,7 +94,7 @@ const Sets: React.FC = () => {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:8000/api/cards/fetch_set/?${params.toString()}`
+        `https://pokemongradingtool-production.up.railway.app/api/cards/fetch_set/?${params.toString()}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
