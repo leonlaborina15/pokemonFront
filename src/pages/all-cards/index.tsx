@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import React from "react";
+
 import { CardTable, SearchForm } from "@/components/shared";
 import { motion } from "framer-motion";
 
@@ -13,7 +14,8 @@ type Card = {
   price_delta: string;
   profit_potential: string;
   last_updated: string;
-  language: string; // Ensure language is included
+  language: string;
+  product_id: string; 
 };
 
 type ApiResponse = {
@@ -93,26 +95,19 @@ const AllCards: React.FC = () => {
       const params = new URLSearchParams();
       params.append("language", language);
 
-      let response: Response | undefined; // Define the response variable here
+      let response: Response | undefined;
 
-      // Handle set name search
       if (set !== "All Sets" && !cardName) {
         params.append("set_name", set.trim());
         response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_set/?${params.toString()}`);
-      }
-      // Handle card name search
-      else if (cardName && set === "All Sets") {
+      } else if (cardName && set === "All Sets") {
         params.append("card_name", cardName.trim());
         response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_card/?${params.toString()}`);
-      }
-      // Handle combined search
-      else if (cardName && set !== "All Sets") {
+      } else if (cardName && set !== "All Sets") {
         params.append("card_name", cardName.trim());
         params.append("set_name", set.trim());
         response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_card_set/?${params.toString()}`);
-      }
-      // Handle card name and card number search
-      else if (cardName && cardNumber) {
+      } else if (cardName && cardNumber) {
         params.append("card_name", cardName.trim());
         params.append("card_number", cardNumber.trim());
         response = await fetch(`https://pokemongradingtool-production.up.railway.app/api/cards/fetch_card_number/?${params.toString()}`);

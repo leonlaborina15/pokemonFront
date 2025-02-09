@@ -14,8 +14,9 @@ type Card = {
   psa_10_price: string;
   price_delta: string;
   profit_potential: string;
-  last_updated: string; // Ensure last_updated is included
-  language: string; // Ensure language is included
+  last_updated: string;
+  language: string;
+  product_id: string;
 };
 
 type ApiResponse = {
