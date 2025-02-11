@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Define the Card type with relevant properties
+// Define the Card type with all necessary properties including product_id
 export type Card = {
   card_name: string;
   card_number: string;
@@ -19,8 +19,8 @@ export type Card = {
   psa_10_price: string;
   price_delta: string;
   profit_potential: string;
-  last_updated: string; // Add this line
-  product_id: string; // Add this line
+  last_updated: string;
+  product_id: string; // Added product_id for linking functionality
 };
 
 type SortColumn = keyof Card;
@@ -66,7 +66,7 @@ export default function CardTable({
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Handle row click to open the product link
+  // Handle row click to open TCGPlayer link
   const handleRowClick = (product_id: string) => {
     const url = `https://www.tcgplayer.com/product/${product_id}/pokemon-sv08-surging-sparks-night-stretcher-251-191?page=1&Language=all`;
     window.open(url, "_blank");
@@ -130,7 +130,7 @@ export default function CardTable({
             </TableHead>
             <TableHead
               className="cursor-pointer select-none"
-              onClick={() => handleSort("last_updated")} // Add sorting for Last Pull
+              onClick={() => handleSort("last_updated")}
             >
               Last Pull {sortColumn === "last_updated" && (sortDirection === "asc" ? "↑" : "↓")}
             </TableHead>
@@ -138,25 +138,27 @@ export default function CardTable({
         </TableHeader>
         <TableBody>
           {loading ? (
-            Array.from({ length: 3 }).map((_, index) => {
-              return (
-                <TableRow key={index}>
-                  {Array.from({ length: 9 }).map((_, index) => ( // Update length to 9
-                    <TableCell key={index}>
-                      <Skeleton
-                        className="h-5 w-full"
-                        style={{ animationDelay: `${(index + index) * 0.1}s` }}
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })
+            Array.from({ length: 3 }).map((_, index) => (
+              <TableRow key={index}>
+                {Array.from({ length: 9 }).map((_, cellIndex) => (
+                  <TableCell key={cellIndex}>
+                    <Skeleton
+                      className="h-5 w-full"
+                      style={{ animationDelay: `${(index + cellIndex) * 0.1}s` }}
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
           ) : sortedCardsMemo.length > 0 ? (
             sortedCardsMemo.map((card, index) => {
               const [name, number] = (card.card_name || "").split(" - ");
               return (
-                <TableRow key={index} onClick={() => handleRowClick(card.product_id)} className="cursor-pointer">
+                <TableRow
+                  key={index}
+                  onClick={() => handleRowClick(card.product_id)}
+                  className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
                   <TableCell>{name || "Unknown Card"}</TableCell>
                   <TableCell>{number || card.card_number || "N/A"}</TableCell>
                   <TableCell>{card.set_name || "N/A"}</TableCell>
@@ -165,14 +167,13 @@ export default function CardTable({
                   <TableCell>${card.psa_10_price || "N/A"}</TableCell>
                   <TableCell>${card.price_delta || "N/A"}</TableCell>
                   <TableCell>{card.profit_potential || "N/A"}%</TableCell>
-                  <TableCell>{formatDate(card.last_updated)}</TableCell> {/* Add this line */}
+                  <TableCell>{formatDate(card.last_updated)}</TableCell>
                 </TableRow>
               );
             })
           ) : (
-            // Render message when no cards are found
             <TableRow>
-              <TableCell colSpan={9} className="text-center text-destructive p-4"> {/* Update colspan to 9 */}
+              <TableCell colSpan={9} className="text-center text-destructive p-4">
                 No Cards Found
               </TableCell>
             </TableRow>
