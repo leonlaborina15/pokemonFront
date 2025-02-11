@@ -19,7 +19,8 @@ export type Card = {
   psa_10_price: string;
   price_delta: string;
   profit_potential: string;
-  last_updated: string;
+  last_updated: string; // Add this line
+  product_id: string; // Add this line
 };
 
 type SortColumn = keyof Card;
@@ -37,27 +38,8 @@ export default function CardTable({
   // Memoize sorted cards to optimize performance
   const sortedCardsMemo = useMemo(() => {
     return [...(sortedCards || [])].sort((a, b) => {
-      let aValue = a[sortColumn];
-      let bValue = b[sortColumn];
-
-      // Ensure aValue and bValue are strings
-      aValue = aValue ?? "";
-      bValue = bValue ?? "";
-
-      // Parse numerical fields
-      if (["tcgplayer_price", "psa_10_price", "price_delta", "profit_potential"].includes(sortColumn)) {
-        aValue = parseFloat(String(aValue).replace(/[^0-9.-]+/g, ""));
-        bValue = parseFloat(String(bValue).replace(/[^0-9.-]+/g, ""));
-      }
-
-      // Parse date field
-      if (sortColumn === "last_updated") {
-        aValue = new Date(String(aValue));
-        bValue = new Date(String(bValue));
-      }
-
-      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+      if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
+      if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
   }, [sortedCards, sortColumn, sortDirection]);
@@ -82,6 +64,12 @@ export default function CardTable({
       minute: "2-digit",
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  // Handle row click to open the product link
+  const handleRowClick = (product_id: string) => {
+    const url = `https://www.tcgplayer.com/product/${product_id}/pokemon-sv08-surging-sparks-night-stretcher-251-191?page=1&Language=all`;
+    window.open(url, "_blank");
   };
 
   return (
@@ -166,10 +154,11 @@ export default function CardTable({
             })
           ) : sortedCardsMemo.length > 0 ? (
             sortedCardsMemo.map((card, index) => {
+              const [name, number] = (card.card_name || "").split(" - ");
               return (
-                <TableRow key={index}>
-                  <TableCell>{card.card_name || "Unknown Card"}</TableCell>
-                  <TableCell>{card.card_number || "N/A"}</TableCell>
+                <TableRow key={index} onClick={() => handleRowClick(card.product_id)} className="cursor-pointer">
+                  <TableCell>{name || "Unknown Card"}</TableCell>
+                  <TableCell>{number || card.card_number || "N/A"}</TableCell>
                   <TableCell>{card.set_name || "N/A"}</TableCell>
                   <TableCell>{card.rarity || "N/A"}</TableCell>
                   <TableCell>${card.tcgplayer_price || "N/A"}</TableCell>
