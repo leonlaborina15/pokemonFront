@@ -15,7 +15,7 @@ type Card = {
   profit_potential: string;
   last_updated: string;
   language: string;
-  product_id: string; 
+  product_id: string;
 };
 
 type ApiResponse = {

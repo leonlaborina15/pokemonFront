@@ -35,11 +35,27 @@ export default function CardTable({
   const [sortColumn, setSortColumn] = useState<SortColumn>("card_name");
   const [sortDirection, setSortDirection] = useState("asc");
 
+  // Function to parse numeric values from strings
+  const parseValue = (value: string, column: SortColumn) => {
+    if (
+      column === "tcgplayer_price" ||
+      column === "psa_10_price" ||
+      column === "price_delta" ||
+      column === "profit_potential"
+    ) {
+      return parseFloat(value.replace(/[^0-9.-]+/g, ""));
+    }
+    return value;
+  };
+
   // Memoize sorted cards to optimize performance
   const sortedCardsMemo = useMemo(() => {
     return [...(sortedCards || [])].sort((a, b) => {
-      if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
-      if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
+      const aValue = parseValue(a[sortColumn], sortColumn);
+      const bValue = parseValue(b[sortColumn], sortColumn);
+
+      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
   }, [sortedCards, sortColumn, sortDirection]);
