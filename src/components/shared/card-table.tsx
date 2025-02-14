@@ -8,8 +8,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
-// Define the Card type with all necessary properties including product_id
 export type Card = {
   card_name: string;
   card_number: string;
@@ -20,7 +28,7 @@ export type Card = {
   price_delta: string;
   profit_potential: string;
   last_updated: string;
-  product_id: string; // Added product_id for linking functionality
+  product_id: string;
 };
 
 type SortColumn = keyof Card;
@@ -34,8 +42,9 @@ export default function CardTable({
 }) {
   const [sortColumn, setSortColumn] = useState<SortColumn>("card_name");
   const [sortDirection, setSortDirection] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  // Function to parse numeric values from strings
   const parseValue = (value: string, column: SortColumn) => {
     if (
       column === "tcgplayer_price" ||
@@ -48,7 +57,6 @@ export default function CardTable({
     return value;
   };
 
-  // Memoize sorted cards to optimize performance
   const sortedCardsMemo = useMemo(() => {
     return [...(sortedCards || [])].sort((a, b) => {
       const aValue = parseValue(a[sortColumn], sortColumn);
@@ -60,7 +68,6 @@ export default function CardTable({
     });
   }, [sortedCards, sortColumn, sortDirection]);
 
-  // Handle sorting logic when a column header is clicked
   const handleSort = (column: SortColumn) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -70,7 +77,6 @@ export default function CardTable({
     }
   };
 
-  // Format the date for better readability
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -82,18 +88,23 @@ export default function CardTable({
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Handle row click to open TCGPlayer link
   const handleRowClick = (product_id: string) => {
     const url = `https://www.tcgplayer.com/product/${product_id}/pokemon-sv08-surging-sparks-night-stretcher-251-191?page=1&Language=all`;
     window.open(url, "_blank");
   };
+
+  const paginatedCards = sortedCardsMemo.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil((sortedCards || []).length / itemsPerPage);
 
   return (
     <div className="mx-auto w-[calc(100dvw-1rem)] md:w-full overflow-x-auto px-4 pb-20">
       <Table className="min-w-full">
         <TableHeader>
           <TableRow>
-            {/* Render table headers with sorting functionality */}
             <TableHead
               className="cursor-pointer select-none"
               onClick={() => handleSort("card_name")}
@@ -166,8 +177,8 @@ export default function CardTable({
                 ))}
               </TableRow>
             ))
-          ) : sortedCardsMemo.length > 0 ? (
-            sortedCardsMemo.map((card, index) => {
+          ) : paginatedCards.length > 0 ? (
+            paginatedCards.map((card, index) => {
               const [name, number] = (card.card_name || "").split(" - ");
               return (
                 <TableRow
@@ -196,6 +207,49 @@ export default function CardTable({
           )}
         </TableBody>
       </Table>
+      <Pagination className="mt-4">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage > 1) setCurrentPage(currentPage - 1);
+              }}
+              className={currentPage === 1 ? "disabled" : ""}
+            />
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <PaginationItem key={i}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentPage(i + 1);
+                }}
+                isActive={currentPage === i + 1}
+              >
+                {i + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          {totalPages > 5 && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+              }}
+              className={currentPage === totalPages ? "disabled" : ""}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }
