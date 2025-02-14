@@ -5,7 +5,7 @@ import Sets from "./pages/sets"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "./components/ui/sidebar"
 import { AppSidebar } from "./components/shared/sidebar/app-sidebar"
 import { ThemeProvider } from "./components/shared/theme-provider"
-import { Toaster } from "sonner"
+import { Toaster } from "@/components/ui/toaster" // Add this import
 
 function App() {
   return (
@@ -39,9 +39,9 @@ function App() {
           </SidebarInset>
         </SidebarProvider>
       </ThemeProvider>
-      <Toaster richColors closeButton position="bottom-right" />
+      <Toaster /> {/* Add this line */}
     </>
   )
 }
 
-export default App
+export default App  
