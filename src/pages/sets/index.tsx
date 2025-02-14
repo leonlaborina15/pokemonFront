@@ -4,7 +4,7 @@ import { SearchForm } from "@/components/shared/search-form-set";
 import CardTable from "@/components/shared/card-table";
 import { cardData } from "../home/card-data";
 import { motion } from "framer-motion";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 type Card = {
   card_name: string;
@@ -53,7 +53,6 @@ const Sets: React.FC = () => {
 
   const [currentSet, setCurrentSet] = useState<string>("");
   const [currentLanguage, setCurrentLanguage] = useState<string>("English");
-  const { toast } = useToast();
 
   const getSetName = (set: string, language: string) => {
     const card = cardData.find((card) => card.title === language);
@@ -104,11 +103,7 @@ const Sets: React.FC = () => {
       const data: ApiResponse = await response.json();
 
       if (data.error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: data.error
-        });
+        toast.error(data.error);
         setCards([]);
         return;
       }
@@ -118,27 +113,21 @@ const Sets: React.FC = () => {
           const [name, number] = card.card_name.split(" - ");
           return { ...card, card_name: name, card_number: number };
         }));
+        toast.success("Cards fetched successfully");
       } else if (Array.isArray(data)) {
         setCards(data.map((card) => {
           const [name, number] = card.card_name.split(" - ");
           return { ...card, card_name: name, card_number: number };
         }));
+        toast.success("Cards fetched successfully");
       } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Invalid response format from server"
-        });
+        toast.error("Invalid response format from server");
         setCards([]);
       }
 
     } catch (error) {
       console.error("Error fetching cards:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred while fetching cards"
-      });
+      toast.error(error instanceof Error ? error.message : "An error occurred while fetching cards");
       setCards([]);
     } finally {
       setLoading(false);
