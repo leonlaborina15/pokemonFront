@@ -39,14 +39,7 @@ function App() {
           </SidebarInset>
         </SidebarProvider>
       </ThemeProvider>
-      <Toaster
-        richColors
-        closeButton
-        position="bottom-right"
-        expand={true}
-        visibleToasts={6}
-        duration={4000}
-      />
+      <Toaster richColors closeButton position="bottom-right" />
     </>
   )
 }
