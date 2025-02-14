@@ -4,6 +4,7 @@ import { SearchForm } from "@/components/shared/search-form-set";
 import CardTable from "@/components/shared/card-table";
 import { cardData } from "../home/card-data";
 import { motion } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
 
 type Card = {
   card_name: string;
@@ -52,7 +53,7 @@ const Sets: React.FC = () => {
 
   const [currentSet, setCurrentSet] = useState<string>("");
   const [currentLanguage, setCurrentLanguage] = useState<string>("English");
-  const [error, setError] = useState<string>("");
+  const { toast } = useToast();
 
   const getSetName = (set: string, language: string) => {
     const card = cardData.find((card) => card.title === language);
@@ -73,7 +74,6 @@ const Sets: React.FC = () => {
   }, [location.search]);
 
   const handleSearch = async () => {
-    setError("");
     setLoading(true);
     setCards([]);
 
@@ -104,7 +104,11 @@ const Sets: React.FC = () => {
       const data: ApiResponse = await response.json();
 
       if (data.error) {
-        setError(data.error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.error
+        });
         setCards([]);
         return;
       }
@@ -120,13 +124,21 @@ const Sets: React.FC = () => {
           return { ...card, card_name: name, card_number: number };
         }));
       } else {
-        setError("Invalid response format from server");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Invalid response format from server"
+        });
         setCards([]);
       }
 
     } catch (error) {
       console.error("Error fetching cards:", error);
-      setError(error instanceof Error ? error.message : "An error occurred while fetching cards");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred while fetching cards"
+      });
       setCards([]);
     } finally {
       setLoading(false);
@@ -157,16 +169,6 @@ const Sets: React.FC = () => {
       <h4 className="scroll-m-20 text-xl text-center font-semibold tracking-tight mb-6">
         {currentLanguage} | {getSetName(currentSet, currentLanguage)}
       </h4>
-
-      {error && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-red-500 text-center mb-4 p-2 bg-red-100 rounded"
-        >
-          {error}
-        </motion.div>
-      )}
 
       <SearchForm
         cardName={cardName}
