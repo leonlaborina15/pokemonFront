@@ -207,51 +207,49 @@ export default function CardTable({
           )}
         </TableBody>
       </Table>
-      {sortedCards && sortedCards.length >= itemsPerPage && (
-        <Pagination className="mt-4">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
+      <Pagination className="mt-4">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage > 1) setCurrentPage(currentPage - 1);
+              }}
+              className={currentPage === 1 ? "disabled" : ""}
+            />
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <PaginationItem key={i}>
+              <PaginationLink
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  if (currentPage > 1) setCurrentPage(currentPage - 1);
+                  setCurrentPage(i + 1);
                 }}
-                className={currentPage === 1 ? "disabled" : ""}
-              />
+                isActive={currentPage === i + 1}
+              >
+                {i + 1}
+              </PaginationLink>
             </PaginationItem>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage(i + 1);
-                  }}
-                  isActive={currentPage === i + 1}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            {totalPages > 5 && (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
+          ))}
+          {totalPages > 5 && (
             <PaginationItem>
-              <PaginationNext
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                }}
-                className={currentPage === totalPages ? "disabled" : ""}
-              />
+              <PaginationEllipsis />
             </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
+          )}
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+              }}
+              className={currentPage === totalPages ? "disabled" : ""}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

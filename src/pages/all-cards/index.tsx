@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { CardTable, SearchForm } from "@/components/shared";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 type Card = {
   card_name: string;
@@ -72,6 +72,7 @@ const AllCards: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [filterDelta, setFilterDelta] = useState<string>("");
   const [rarity, setRarity] = useState<string>("All Rarity");
+  const { toast } = useToast();
 
   useEffect(() => {
     setCards([]);
@@ -83,7 +84,12 @@ const AllCards: React.FC = () => {
 
   const handleSearch = async () => {
     if (!cardName && set === "All Sets") {
-      toast.error("Please enter either a card name or select a set.");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please enter either a card name or select a set",
+
+      });
       return;
     }
     setLoading(true);
@@ -122,7 +128,11 @@ const AllCards: React.FC = () => {
       const data: ApiResponse = await response.json();
 
       if (data.error) {
-        toast.error(data.error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.error
+        });
         setCards([]);
         return;
       }
@@ -138,13 +148,21 @@ const AllCards: React.FC = () => {
           return { ...card, card_name: name, card_number: number };
         }));
       } else {
-        toast.error("Invalid response format from server");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Invalid response format from server"
+        });
         setCards([]);
       }
 
     } catch (error) {
       console.error("Error fetching cards:", error);
-      toast.error(error instanceof Error ? error.message : "An error occurred while fetching cards");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred while fetching cards"
+      });
       setCards([]);
     } finally {
       setLoading(false);
