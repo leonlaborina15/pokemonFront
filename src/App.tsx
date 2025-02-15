@@ -5,7 +5,8 @@ import Sets from "./pages/sets"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "./components/ui/sidebar"
 import { AppSidebar } from "./components/shared/sidebar/app-sidebar"
 import { ThemeProvider } from "./components/shared/theme-provider"
-import { Toaster } from "@/components/ui/toaster" // Add this import
+import { Toaster } from "@/components/ui/toaster"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 function App() {
   return (
@@ -39,9 +40,10 @@ function App() {
           </SidebarInset>
         </SidebarProvider>
       </ThemeProvider>
-      <Toaster /> {/* Add this line */}
+      <Toaster />
+      <SpeedInsights /> {/* Add this line */}
     </>
   )
 }
 
-export default App  
+export default App
