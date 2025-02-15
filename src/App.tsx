@@ -6,8 +6,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "./components/ui/s
 import { AppSidebar } from "./components/shared/sidebar/app-sidebar"
 import { ThemeProvider } from "./components/shared/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-
+import { SpeedInsights } from "@vercel/speed-insights/react"
 function App() {
   return (
     <>
