@@ -1,9 +1,21 @@
 import React from "react";
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "../ui/button";
 import { Info, LoaderIcon, X } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Slider } from "@/components/ui/slider";
 
 type SearchFormProps = {
   cardName: string;
@@ -42,6 +54,28 @@ const SearchForm: React.FC<SearchFormProps> = ({
   rarityOptions,
   setOptions,
 }) => {
+  // Convert slider value to filter delta string
+  const handleSliderChange = (value: number[]) => {
+    const sliderValue = value[0];
+    if (sliderValue === 0) {
+      setFilterDelta("");
+    } else if (sliderValue < 0) {
+      setFilterDelta(`<${Math.abs(sliderValue)}`);
+    } else {
+      setFilterDelta(`>${sliderValue}`);
+    }
+  };
+
+  // Convert filter delta string to slider value
+  const getInitialSliderValue = () => {
+    if (!filterDelta) return [0];
+    const match = filterDelta.match(/([<>])(\d+)/);
+    if (!match) return [0];
+
+    const [ operator, value] = match;
+    return [operator === '<' ? -Number(value) : Number(value)];
+  };
+
   return (
     <div className="p-4">
       <div className="max-w-xl mx-auto w-full">
@@ -58,7 +92,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
             />
             {cardName && (
               <button
-                onClick={() => setCardName("")} // Clear only cardName
+                onClick={() => setCardName("")}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 type="button"
               >
@@ -79,7 +113,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
             />
             {cardNumber && (
               <button
-                onClick={() => setCardNumber("")} // Clear only cardNumber
+                onClick={() => setCardNumber("")}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 type="button"
               >
@@ -103,35 +137,37 @@ const SearchForm: React.FC<SearchFormProps> = ({
             </SelectContent>
           </Select>
 
-          {/* Input for filtering by price delta */}
-          <div className="relative">
-            <Input
-              id="filter-delta"
-              type="text"
-              value={filterDelta}
-              onChange={(e) => setFilterDelta(e.target.value)}
-              placeholder="Filter by Price Delta"
-              className="pr-8"
-            />
-            {filterDelta && (
-              <button
-                onClick={() => setFilterDelta("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                type="button"
-              >
-                <X size={16} />
-              </button>
-            )}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger className="absolute right-8 top-1/2 -translate-y-1/2">
-                  <Info size={16} strokeWidth={2} aria-hidden="true" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>(e.g., &lt;500 or &gt;200)</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          {/* Price Delta Filter with Centered Slider */}
+          <div className="relative space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-full">
+                <Slider
+                  defaultValue={getInitialSliderValue()}
+                  min={-1000}
+                  max={1000}
+                  step={1}
+                  onValueChange={handleSliderChange}
+                  className="w-full"
+                />
+                <div className="flex justify-between mt-1">
+                  <span className="text-xs text-gray-500">Filter by Price Delta</span>
+                  <span className="text-xs text-gray-500">
+                    {filterDelta || '0'}
+                  </span>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger className="inline-flex">
+                        <Info size={16} strokeWidth={2} aria-hidden="true" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Slide left for less than, right for greater than</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
