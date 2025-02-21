@@ -7,6 +7,7 @@ import { AppSidebar } from "./components/shared/sidebar/app-sidebar"
 import { ThemeProvider } from "./components/shared/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { SpeedInsights } from "@vercel/speed-insights/react"
+
 function App() {
   return (
     <>
@@ -21,6 +22,9 @@ function App() {
               <div className="flex items-center gap-2 px-4">
                 <SidebarTrigger className="-ml-1" />
               </div>
+
+
+
             </header>
             <Routes>
               <Route

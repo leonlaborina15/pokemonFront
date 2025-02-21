@@ -54,7 +54,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
               id="card-name"
               onChange={(e) => setCardName(e.target.value)}
               placeholder="Enter card name"
-              className="pr-8" // Add padding for the X button
+              className="pr-8"
             />
             {cardName && (
               <button
