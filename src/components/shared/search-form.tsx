@@ -75,7 +75,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
     const [ operator, value] = match;
     return [operator === '<' ? -Number(value) : Number(value)];
   };
-
   return (
     <div className="p-4">
       <div className="max-w-xl mx-auto w-full">
@@ -137,52 +136,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
             </SelectContent>
           </Select>
 
-          {/* Price Delta Filter with Centered Slider */}
-          <div className="relative space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="w-full">
-                <Slider
-                  defaultValue={getInitialSliderValue()}
-                  min={-1000}
-                  max={1000}
-                  step={1}
-                  onValueChange={handleSliderChange}
-                  className="w-full"
-                />
-                <div className="flex justify-between mt-1">
-                  <span className="text-xs text-gray-500">Filter by Price Delta</span>
-                  <span className="text-xs text-gray-500">
-                    {filterDelta || '0'}
-                  </span>
-
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger className="inline-flex">
-                        <Info size={16} strokeWidth={2} aria-hidden="true" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Slide left for less than, right for greater than</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2 items-center mt-2">
-          {/* Select for language */}
-          <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Language" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="English">English</SelectItem>
-              <SelectItem value="Japanese">Japanese</SelectItem>
-            </SelectContent>
-          </Select>
-
           {/* Select for rarity */}
           <Select value={rarity} onValueChange={setRarity}>
             <SelectTrigger className="w-full">
@@ -197,11 +150,53 @@ const SearchForm: React.FC<SearchFormProps> = ({
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="flex gap-2 items-start mt-2">
+          {/* Select for language */}
+          <div className="w-1/3">
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger>
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="English">English</SelectItem>
+                <SelectItem value="Japanese">Japanese</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Price Delta Filter with Centered Slider */}
+          <div className="w-1/3">
+            <div className="flex flex-col">
+              <Slider
+                defaultValue={getInitialSliderValue()}
+                min={-1000}
+                max={1000}
+                step={1}
+                onValueChange={handleSliderChange}
+                className="w-full"
+              />
+              <div className="flex justify-between mt-1">
+                <span className="text-xs text-gray-500">Filter Price Delta: {filterDelta || '0'}</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="inline-flex">
+                      <Info size={16} strokeWidth={2} aria-hidden="true" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Slide left for less than, right for greater than</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+          </div>
 
           {/* Search button */}
           <Button
             onClick={handleSearch}
-            className="min-w-[4.375rem] w-full"
+            className="w-1/3 h-10"
             disabled={loading}
           >
             {loading ? <LoaderIcon className="animate-spin" /> : "Search"}

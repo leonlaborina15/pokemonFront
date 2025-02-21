@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Info, LoaderIcon, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 
 type SearchFormProps = {
   cardName: string;
@@ -31,106 +32,125 @@ export const SearchForm = ({
   setRarity,
   rarityOptions,
 }: SearchFormProps) => {
+  const handleSliderChange = (value: number[]) => {
+    const sliderValue = value[0];
+    if (sliderValue === 0) {
+      setFilterDelta("");
+    } else if (sliderValue < 0) {
+      setFilterDelta(`<${Math.abs(sliderValue)}`);
+    } else {
+      setFilterDelta(`>${sliderValue}`);
+    }
+  };
+
+  const getInitialSliderValue = () => {
+    if (!filterDelta) return [0];
+    const match = filterDelta.match(/([<>])(\d+)/);
+    if (!match) return [0];
+
+    const [, operator, value] = match;
+    return [operator === '<' ? -Number(value) : Number(value)];
+  };
+
   return (
     <>
-      <div className="mt-4 flex gap-2 mx-auto w-fit p-4 pb-2">
-        <div className="relative">
-          <Input
-            type="text"
-            value={cardName}
-            id="card-name"
-            onChange={(e) => setCardName(e.target.value)}
-            placeholder="Enter card name"
-            className="pr-8" // Add padding for the X button
-          />
-          {cardName && (
-            <button
-              onClick={() => setCardName("")} // Clear only cardName
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              type="button"
-            >
-              <X size={16} />
-            </button>
-          )}
-        </div>
-
-        <div className="relative">
-          <Input
-            type="text"
-            value={cardNumber}
-            id="card-number"
-            onChange={(e) => setCardNumber(e.target.value)}
-            placeholder="Enter card number"
-            className="pr-8"
-          />
-          {cardNumber && (
-            <button
-              onClick={() => setCardNumber("")} // Clear only cardNumber
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              type="button"
-            >
-              <X size={16} />
-            </button>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <div className="relative h-9">
+      <div className="mt-4 flex flex-col gap-2 mx-auto w-fit p-4 pb-2">
+        <div className="flex gap-2">
+          <div className="relative">
             <Input
-              id="filter-delta"
               type="text"
-              value={filterDelta}
-              onChange={(e) => setFilterDelta(e.target.value)}
-              placeholder="Filter by Price Delta"
-              className="max-w-80"
+              value={cardName}
+              id="card-name"
+              onChange={(e) => setCardName(e.target.value)}
+              placeholder="Enter card name"
+              className="pr-8"
             />
-            {filterDelta && (
+            {cardName && (
               <button
-                onClick={() => setFilterDelta("")} // Clear only filterDelta
+                onClick={() => setCardName("")}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 type="button"
               >
                 <X size={16} />
               </button>
             )}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger className="absolute inset-y-0 end-0 flex w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50">
-                  <Info size={16} strokeWidth={2} aria-hidden="true" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>(e.g., &lt;500 or &gt;200)</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
+
+          <div className="relative">
+            <Input
+              type="text"
+              value={cardNumber}
+              id="card-number"
+              onChange={(e) => setCardNumber(e.target.value)}
+              placeholder="Enter card number"
+              className="pr-8"
+            />
+            {cardNumber && (
+              <button
+                onClick={() => setCardNumber("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                type="button"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+
+          <Select value={rarity} onValueChange={setRarity}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Rarity" />
+            </SelectTrigger>
+            <SelectContent>
+              {rarityOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
-        <Select value={rarity} onValueChange={setRarity}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select Rarity" />
-          </SelectTrigger>
-          <SelectContent>
-            {rarityOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2 items-center">
+          <div className="w-1/2">
+            <div className="flex flex-col">
+              <Slider
+                defaultValue={getInitialSliderValue()}
+                min={-1000}
+                max={1000}
+                step={1}
+                onValueChange={handleSliderChange}
+                className="w-full"
+              />
+              <div className="flex justify-between mt-1">
+                <span className="text-xs text-gray-500">Price Delta: {filterDelta || '0'}</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="inline-flex">
+                      <Info size={16} strokeWidth={2} aria-hidden="true" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Slide left for less than, right for greater than</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+          </div>
 
-        <Button
-          onClick={handleSearch}
-          className="min-w-[4.375rem] hidden sm:inline-flex"
-          disabled={loading}
-        >
-          {loading ? <LoaderIcon className="animate-spin" /> : "Search"}
-        </Button>
+          <Button
+            onClick={handleSearch}
+            className="w-1/2 h-10 hidden sm:inline-flex"
+            disabled={loading}
+          >
+            {loading ? <LoaderIcon className="animate-spin" /> : "Search"}
+          </Button>
+        </div>
       </div>
-      <div className="px-4 mb-4">
+
+      <div className="px-4 mb-4 sm:hidden">
         <Button
           onClick={handleSearch}
-          className="w-full sm:hidden inline-flex"
+          className="w-full inline-flex"
           disabled={loading}
         >
           {loading ? <LoaderIcon className="animate-spin" /> : "Search"}
