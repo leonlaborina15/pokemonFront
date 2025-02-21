@@ -122,7 +122,7 @@ export const SearchForm = ({
                 className="w-full"
               />
               <div className="flex justify-between mt-1">
-                <span className="text-xs text-gray-500">Price Delta: {filterDelta || '0'}</span>
+                <span className="text-xs text-gray-500">Filter By Price Delta: {filterDelta || '0'}</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger className="inline-flex">
