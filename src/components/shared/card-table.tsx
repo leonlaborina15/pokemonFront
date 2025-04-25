@@ -190,9 +190,9 @@ export default function CardTable({
                   <TableCell>{number || card.card_number || "N/A"}</TableCell>
                   <TableCell>{card.set_name || "N/A"}</TableCell>
                   <TableCell>{card.rarity || "N/A"}</TableCell>
-                  <TableCell>${card.tcgplayer_price || "N/A"}</TableCell>
-                  <TableCell>${card.psa_10_price || "N/A"}</TableCell>
-                  <TableCell>${card.price_delta || "N/A"}</TableCell>
+                  <TableCell className="text-right">${card.tcgplayer_price || "N/A"}</TableCell>
+                  <TableCell className="text-right">${card.psa_10_price || "N/A"}</TableCell>
+                  <TableCell className="text-right">${card.price_delta || "N/A"}</TableCell>
                   <TableCell>{card.profit_potential || "N/A"}%</TableCell>
                   <TableCell>{formatDate(card.last_updated)}</TableCell>
                 </TableRow>
